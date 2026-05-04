@@ -58,9 +58,8 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
                     .parseClaimsJws(token)
                     .getBody();
 
-            String userId = claims.get("userId", Long.class) != null
-                    ? String.valueOf(claims.get("userId", Long.class))
-                    : String.valueOf(claims.get("userId"));
+            Object userIdClaim = claims.get("userId");
+            String userId = userIdClaim != null ? String.valueOf(userIdClaim) : "";
             String email = claims.get("email", String.class);
 
             ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()

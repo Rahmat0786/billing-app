@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BillingService {
 
+    private static final BigDecimal DEFAULT_TAX_RATE = new BigDecimal("0.18");
+
     private final OrderRepository orderRepository;
     private final InvoiceRepository invoiceRepository;
     private final ProductServiceClient productServiceClient;
@@ -66,8 +68,7 @@ public class BillingService {
         }
 
         // Generate invoice
-        BigDecimal taxRate = new BigDecimal("0.18");
-        BigDecimal taxAmount = totalAmount.multiply(taxRate);
+        BigDecimal taxAmount = totalAmount.multiply(DEFAULT_TAX_RATE);
         BigDecimal grandTotal = totalAmount.add(taxAmount);
 
         Invoice invoice = Invoice.builder()
@@ -75,7 +76,7 @@ public class BillingService {
                 .userId(userId)
                 .totalAmount(totalAmount)
                 .taxAmount(taxAmount)
-                .taxRate(taxRate)
+                .taxRate(DEFAULT_TAX_RATE)
                 .grandTotal(grandTotal)
                 .build();
         invoiceRepository.save(invoice);
