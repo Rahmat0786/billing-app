@@ -1,0 +1,33 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+        - id: billing-service
+          uri: lb://billing-service
+          predicates:
+            - Path=/api/billing/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+app:
+  jwt:
+    secret: mySecretKeyForJWTTokenGenerationBillingApp2024
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
